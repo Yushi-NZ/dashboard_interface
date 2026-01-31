@@ -3,7 +3,7 @@
 function Dashboard() {
   return (
     <div>
-      Dashboard
+      Dashboarda
     </div>
   )
 }
