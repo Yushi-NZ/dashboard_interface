@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import supabase from '../helper/supabaseClient';
-import {Link, useNavigate} from "react-router-dom";
+import {Link} from "react-router-dom";
 
-function Login() {
+function Register() {
 
-  const navigate = useNavigate();
     const  [email, setEmail] = useState("");
     const  [password, setPassword] = useState("");
     const  [message, setMessage] = useState("");
@@ -13,7 +12,7 @@ function Login() {
         event.preventDefault();
         setMessage("");
 
-        const {data,error} = await supabase.auth.signInWithPassword({
+        const {data,error} = await supabase.auth.signUp({
             email: email,
             password: password,
         });
@@ -24,8 +23,7 @@ function Login() {
         }
 
         if (data){
-            navigate("/dashboard");
-            return null;
+            setMessage("User account created!");
         }
         setEmail();
         setPassword();
@@ -33,7 +31,7 @@ function Login() {
 
   return (
     <div>
-        <h2>Login</h2>
+        <h2>Register</h2>
         <br></br>
         {message &&<span>{message}</span>}
       <form onSubmit={handleSubmit}>
@@ -49,11 +47,11 @@ function Login() {
         type="password" 
         placeholder='Password'
         required/>
-        <button type='sumbit'>Log In</button>
+        <button type='sumbit'>Create Account</button>
       </form>
-      <span>Not registered?</span> <Link to="/register"></Link>
+      <span>Already registered?</span> <Link to="/login">Log in.</Link>
     </div>
   )
 }
 
-export default Login
+export default Register;
