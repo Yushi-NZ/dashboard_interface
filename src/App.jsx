@@ -13,7 +13,7 @@ function App() {
         { /* home */ }
         <Route 
         path="/"
-        element={<Home />}
+        element={<Login />}
         />
 
         { /* login */ }
