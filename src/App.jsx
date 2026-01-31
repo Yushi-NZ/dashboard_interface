@@ -1,8 +1,10 @@
-import Home from './pages/Home'
-import Login from './pages/Login'
-import Dashboard from './pages/Dashboard'
+import React from 'react';
 
-import { BrowserRouter, Routes, Route } from 'react-router'
+import { BrowserRouter, Routes, Route } from 'react-router';
+
+import Home from './pages/Home';
+import Login from './pages/Login';
+import Dashboard from './pages/Dashboard';
 
 function App() {
   return (
@@ -28,6 +30,6 @@ function App() {
       </Routes>
     </BrowserRouter>
   )
-}
+};
 
-export default App
+export default App;
