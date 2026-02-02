@@ -51,7 +51,7 @@ function Login() {
         required/>
         <button type='sumbit'>Log In</button>
       </form>
-      <span>Already registered?</span> <Link to="/register">Log in.</Link>
+      <span>Not registered yet?</span> <Link to="/register">Register Now.</Link>
     </div>
   )
 }

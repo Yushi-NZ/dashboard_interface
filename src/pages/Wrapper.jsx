@@ -3,7 +3,7 @@ import supabase from '../helper/supabaseClient';
 import { Navigate } from 'react-router';
 
 function Wrapper({children}) {
-    const [authenticated, setAuthenticed] = usestate(false);
+    const [authenticated, setAuthenticed] = useState(false);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -27,5 +27,6 @@ function Wrapper({children}) {
         return <Navigate to="/login" />;
     }
 }
+
 
 export default Wrapper;

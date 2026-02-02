@@ -1,0 +1,43 @@
+import { setAuthCookie } from "./_cookie.js";
+
+export default async function handler(req, res) {
+  const code = req.query.code;
+
+  if (!code) {
+    return res.status(400).send("Missing ?code from Xero callback.");
+  }
+
+  const tokenRes = await fetch("https://identity.xero.com/connect/token", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      Authorization:
+        "Basic " +
+        Buffer.from(
+          `${process.env.XERO_CLIENT_ID}:${process.env.XERO_CLIENT_SECRET}`
+        ).toString("base64"),
+    },
+    body: new URLSearchParams({
+      grant_type: "authorization_code",
+      code,
+      redirect_uri: process.env.XERO_REDIRECT_URI,
+    }),
+  });
+
+  const tokens = await tokenRes.json();
+
+  if (!tokenRes.ok) {
+    return res.status(500).json({ error: "Token exchange failed", tokens });
+  }
+
+  // Store in cookie (temporary approach)
+  setAuthCookie(res, {
+    access_token: tokens.access_token,
+    refresh_token: tokens.refresh_token,
+    expires_in: tokens.expires_in,
+    created_at: Date.now(),
+  });
+
+  // Send them to dashboard
+  res.redirect("/dashboard");
+}
