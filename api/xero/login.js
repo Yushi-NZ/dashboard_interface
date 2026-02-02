@@ -1,11 +1,26 @@
-export default async function handler(req, res) {
-  const clientId = import.meta.env.VITE_XERO_CLIENT_ID;
-  const redirectUrl = import.meta.env.VITE_XERO_REDIRECT_URL;
-  const scopes = import.meta.env.VITE_XERO_SCOPES;
+export default function handler(req, res) {
+  const clientId = process.env.XERO_CLIENT_ID;
+  const redirectUri = process.env.XERO_REDIRECT_URI;
+  const scopes = process.env.XERO_SCOPES;
 
-  const state = "xero_" + Date.now(); // you can make this stronger later
+  if (!clientId || !redirectUri || !scopes) {
+    return res.status(500).json({
+      error: "Missing Xero env vars",
+      clientId: !!clientId,
+      redirectUri: !!redirectUri,
+      scopes: !!scopes,
+    });
+  }
 
+  const state = "xero_" + Date.now();
 
+  const url =
+    "https://login.xero.com/identity/connect/authorize" +
+    `?response_type=code` +
+    `&client_id=${encodeURIComponent(clientId)}` +
+    `&redirect_uri=${encodeURIComponent(redirectUri)}` +
+    `&scope=${encodeURIComponent(scopes)}` +
+    `&state=${encodeURIComponent(state)}`;
 
-  console.log(clientId);
+  res.redirect(url);
 }
