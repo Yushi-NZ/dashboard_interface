@@ -10,14 +10,14 @@ export default function handler(req, res) {
   }
 
   // Generate a simple random state string without imports
-  const state = Math.random().toString(36).substring(2, 15);
+  const state = Date.now();
 
   // Use the native URLSearchParams (available in Node.js & Browsers) 
   // This replaces the need for manual encodeURIComponent calls
   const params = new URLSearchParams({
     response_type: 'code',
     client_id: clientId,
-    redirect_uri: redirectUrl,
+    redirect_url: redirectUrl,
     scope: scopes,
     state: state
   });
