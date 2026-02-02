@@ -12,8 +12,6 @@ export default function handler(req, res) {
     });
   }
 
-  const state = "xero_" + Date.now();
-
   const url =
     "https://login.xero.com/identity/connect/authorize" +
     `?response_type=code` +
