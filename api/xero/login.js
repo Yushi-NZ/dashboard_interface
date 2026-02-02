@@ -17,5 +17,5 @@ export default function handler(req, res) {
     state: state
   });
 
-  res.redirect(`https://login.xero.com/identity/connect/authorize?${params.toString()}`);
+  console.log(`https://login.xero.com/identity/connect/authorize?${params.toString()}`);
 }
