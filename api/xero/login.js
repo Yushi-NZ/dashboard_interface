@@ -1,28 +1,21 @@
 export default function handler(req, res) {
-  const clientId = process.env.XERO_CLIENT_ID;
-  const redirectUrl = process.env.XERO_REDIRECT_URL;
-  const scopes = process.env.XERO_SCOPES;
+  const { XERO_CLIENT_ID, XERO_REDIRECT_URL, XERO_SCOPES } = process.env;
 
-  if (!clientId || !redirectUrl || !scopes) {
-    return res.status(500).json({
-      error: "Missing Xero env vars",
-    });
+  if (!XERO_CLIENT_ID || !XERO_REDIRECT_URL || !XERO_SCOPES) {
+    return res.status(500).json({ error: "Missing Environment Variables" });
   }
 
-  // Generate a simple random state string without imports
-  const state = Date.now();
+  // We'll use a hardcoded state for a moment just to eliminate variables
+  // In production, you'd store this in a cookie.
+  const state = "12345"; 
 
-  // Use the native URLSearchParams (available in Node.js & Browsers) 
-  // This replaces the need for manual encodeURIComponent calls
   const params = new URLSearchParams({
     response_type: 'code',
-    client_id: clientId,
-    redirect_uri: redirectUrl,
-    scope: scopes,
+    client_id: XERO_CLIENT_ID,
+    redirect_uri: XERO_REDIRECT_URL,
+    scope: XERO_SCOPES,
     state: state
   });
 
-  const authUrl = `https://login.xero.com/identity/connect/authorize?${params.toString()}`;
-
-  res.redirect(authUrl);
+  res.redirect(`https://login.xero.com/identity/connect/authorize?${params.toString()}`);
 }
