@@ -14,13 +14,13 @@ export default async function handler(req, res) {
       Authorization:
         "Basic " +
         Buffer.from(
-          `${process.env.VITE_XERO_CLIENT_ID}:${process.env.VITE_XERO_CLIENT_SECRET}`
+          `${process.env.XERO_CLIENT_ID}:${process.env.XERO_CLIENT_SECRET}`
         ).toString("base64"),
     },
     body: new URLSearchParams({
       grant_type: "authorization_code",
       code,
-      redirect_url: process.env.VITE_XERO_REDIRECT_URL,
+      redirect_url: process.env.XERO_REDIRECT_URL,
     }),
   });
 

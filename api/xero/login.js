@@ -6,19 +6,23 @@ export default function handler(req, res) {
   if (!clientId || !redirectUrl || !scopes) {
     return res.status(500).json({
       error: "Missing Xero env vars",
-      clientId: !!clientId,
-      redirectUrl: !!redirectUrl,
-      scopes: !!scopes,
     });
   }
 
-  /*const url =
-    "https://login.xero.com/identity/connect/authorize" +
-    `?response_type=code` +
-    `&client_id=${encodeURLComponent(clientId)}` +
-    `&redirect_uri=${encodeURLComponent(redirectUrl)}` +
-    `&scope=${encodeURLComponent(scopes)}` +
-    `&state=${encodeURLComponent(state)}`;
+  // Generate a simple random state string without imports
+  const state = Math.random().toString(36).substring(2, 15);
 
-  //res.redirect(url);*/
+  // Use the native URLSearchParams (available in Node.js & Browsers) 
+  // This replaces the need for manual encodeURIComponent calls
+  const params = new URLSearchParams({
+    response_type: 'code',
+    client_id: clientId,
+    redirect_uri: redirectUrl,
+    scope: scopes,
+    state: state
+  });
+
+  const authUrl = `https://login.xero.com/identity/connect/authorize?${params.toString()}`;
+
+  res.redirect(authUrl);
 }

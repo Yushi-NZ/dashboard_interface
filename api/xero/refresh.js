@@ -11,7 +11,7 @@ export default async function handler(req, res) {
       Authorization:
         "Basic " +
         Buffer.from(
-          `${import.meta.env.VITE-XERO_CLIENT_ID}:${import.meta.env.VITE_XERO_CLIENT_SECRET}`
+          `${import.meta.env.XERO_CLIENT_ID}:${import.meta.env.XERO_CLIENT_SECRET}`
         ).toString("base64"),
     },
     body: new URLSearchParams({
