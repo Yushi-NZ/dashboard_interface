@@ -17,7 +17,7 @@ export default function handler(req, res) {
   const params = new URLSearchParams({
     response_type: 'code',
     client_id: clientId,
-    redirect_url: redirectUrl,
+    redirect_uri: redirectUrl,
     scope: scopes,
     state: state
   });
