@@ -5,13 +5,7 @@ export default async function handler(req, res) {
 
   const state = "xero_" + Date.now(); // you can make this stronger later
 
-  const url =
-    "https://login.xero.com/identity/connect/authorize" +
-    `?response_type=code` +
-    `&client_id=${encodeURlComponent(clientId)}` +
-    `&redirect_url=${encodeURLComponent(redirectUrl)}` +
-    `&scope=${encodeURLComponent(scopes)}` +
-    `&state=${encodeURLComponent(state)}`;
 
-  console.log(url);
+
+  console.log(clientId);
 }
