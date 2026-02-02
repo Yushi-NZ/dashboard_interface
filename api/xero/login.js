@@ -12,7 +12,7 @@ export default function handler(req, res) {
     });
   }
 
-  const url =
+  /*const url =
     "https://login.xero.com/identity/connect/authorize" +
     `?response_type=code` +
     `&client_id=${encodeURLComponent(clientId)}` +
@@ -20,5 +20,5 @@ export default function handler(req, res) {
     `&scope=${encodeURLComponent(scopes)}` +
     `&state=${encodeURLComponent(state)}`;
 
-  res.redirect(url);
+  //res.redirect(url);*/
 }
