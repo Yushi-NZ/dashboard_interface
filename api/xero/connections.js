@@ -3,14 +3,7 @@ import { getAuthCookie, setAuthCookie } from "./_cookie.js";
 export default async function handler(req, res) {
   try {
     const auth = getAuthCookie(req);
-
-    if (!auth) {
-      return res.status(401).json({ error: "No auth cookie found" });
-    }
-
-    if (!auth.access_token) {
-      return res.status(401).json({ error: "Missing access_token in cookie", authKeys: Object.keys(auth) });
-    }
+    if (!auth?.access_token) return res.status(401).json({ error: "Unauthorized" });
 
     const response = await fetch("https://api.xero.com/connections", {
       headers: {
@@ -19,40 +12,16 @@ export default async function handler(req, res) {
       },
     });
 
-    const text = await response.text(); // read raw response first
+    const data = await response.json();
+    const tenantId = data?.[0]?.tenantId;
 
-    let connections;
-    try {
-      connections = JSON.parse(text);
-    } catch {
-      connections = { raw: text };
+    if (tenantId) {
+      // Use fallback to avoid spreading null
+      setAuthCookie(res, { ...(auth || {}), tenantId });
     }
 
-    if (!response.ok) {
-      // DO NOT convert Xero errors to 500
-      return res.status(response.status).json({
-        error: "Xero /connections failed",
-        status: response.status,
-        connections,
-      });
-    }
-
-    const tenantId = connections?.[0]?.tenantId;
-    if (!tenantId) {
-      return res.status(400).json({
-        error: "No Xero tenantId found",
-        connections,
-      });
-    }
-
-    setAuthCookie(res, { ...auth, tenantId });
-
-    return res.status(200).json({ tenantId, connections });
+    return res.status(200).json(data);
   } catch (err) {
-    return res.status(500).json({
-      error: "Server crashed",
-      message: err?.message,
-      stack: err?.stack,
-    });
+    return res.status(500).json({ error: "Connections crash", message: err.message });
   }
 }
