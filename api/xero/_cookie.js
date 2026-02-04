@@ -1,35 +1,34 @@
-import cookie from "cookie";
-import jwt from "jsonwebtoken";
-
-const COOKIE_NAME = "xero_auth";
-
-export function setAuthCookie(res, payload) {
-  if (!process.env.APP_JWT_SECRET) {
-    throw new Error("Missing APP_JWT_SECRET environment variable");
-  }
-
-  const token = jwt.sign(payload, process.env.APP_JWT_SECRET, { expiresIn: "7d" });
-
-  res.setHeader(
-    "Set-Cookie",
-    cookie.serialize(COOKIE_NAME, token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      path: "/",
-      maxAge: 60 * 60 * 24 * 7,
-    })
-  );
-}
-
-export function getAuthCookie(req) {
-  const cookies = cookie.parse(req.headers.cookie || "");
-  const token = cookies[COOKIE_NAME];
-  if (!token) return null;
-
+export default async function handler(req, res) {
   try {
-    return jwt.verify(token, process.env.APP_JWT_SECRET);
-  } catch {
-    return null;
+    const auth = getAuthCookie(req) || {}; // Safety: fallback to empty object
+
+    // ... (your fetch logic) ...
+
+    const tenantId = connections?.[0]?.tenantId;
+    
+    if (!tenantId) {
+      // Explicit return to stop execution
+      return res.status(400).json({
+        error: "No Xero tenantId found",
+        connections,
+      });
+    }
+
+    // Only set the cookie if we actually have a tenantId
+    try {
+      setAuthCookie(res, { ...auth, tenantId });
+    } catch (cookieErr) {
+      return res.status(500).json({ error: "Cookie setting failed", message: cookieErr.message });
+    }
+
+    return res.status(200).json({ tenantId, connections });
+
+  } catch (err) {
+    // This will now tell you EXACTLY what is failing
+    return res.status(500).json({
+      error: "Server crashed",
+      message: err?.message,
+      code: err?.code, // Check for ERR_HTTP_HEADERS_SENT
+    });
   }
 }
