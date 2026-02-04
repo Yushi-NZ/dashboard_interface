@@ -1,6 +1,6 @@
 export default function handler(req, res) {
   const clientId = process.env.XERO_CLIENT_ID;
-  const redirectUri = process.env.XERO_REDIRECT_URI;
+  const redirectUri = process.env.XERO_REDIRECT_URL;
   const scopes = process.env.XERO_SCOPES;
 
   if (!clientId || !redirectUri || !scopes) {
