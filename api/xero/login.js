@@ -1,21 +1,17 @@
-export default function handler(req, res) {
-  const { XERO_CLIENT_ID, XERO_REDIRECT_URL, XERO_SCOPES } = process.env;
+export default async function handler(req, res) {
+  const clientId = import.meta.env.VITE_XERO_CLIENT_ID;
+  const redirectUrl = import.meta.env.VITE_XERO_REDIRECT_URL;
+  const scopes = import.meta.env.VITE_XERO_SCOPES;
 
-  if (!XERO_CLIENT_ID || !XERO_REDIRECT_URL || !XERO_SCOPES) {
-    return res.status(500).json({ error: "Missing Environment Variables" });
-  }
+  const state = "xero_" + Date.now(); // you can make this stronger later
 
-  // We'll use a hardcoded state for a moment just to eliminate variables
-  // In production, you'd store this in a cookie.
-  const state = "12345"; 
+  const url =
+    "https://login.xero.com/identity/connect/authorize" +
+    `?response_type=code` +
+    `&client_id=${encodeURlComponent(clientId)}` +
+    `&redirect_url=${encodeURLComponent(redirectUrl)}` +
+    `&scope=${encodeURLComponent(scopes)}` +
+    `&state=${encodeURLComponent(state)}`;
 
-  const params = new URLSearchParams({
-    response_type: 'code',
-    client_id: XERO_CLIENT_ID,
-    redirect_uri: XERO_REDIRECT_URL,
-    scope: XERO_SCOPES,
-    state: state
-  });
-
-  console.log(`https://login.xero.com/identity/connect/authorize?${params.toString()}`);
+  res.redirect(url);
 }
