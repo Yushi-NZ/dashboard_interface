@@ -4,6 +4,10 @@ import jwt from "jsonwebtoken";
 const COOKIE_NAME = "xero_auth";
 
 export function setAuthCookie(res, payload) {
+  if (!process.env.APP_JWT_SECRET) {
+    throw new Error("Missing APP_JWT_SECRET environment variable");
+  }
+
   const token = jwt.sign(payload, process.env.APP_JWT_SECRET, { expiresIn: "7d" });
 
   res.setHeader(
@@ -13,7 +17,7 @@ export function setAuthCookie(res, payload) {
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
-      maxAge: 60 * 60 * 24 * 7, // 7 days
+      maxAge: 60 * 60 * 24 * 7,
     })
   );
 }
