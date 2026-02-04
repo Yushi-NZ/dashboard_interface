@@ -6,6 +6,5 @@ const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY
 if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error("Missing Supabase env vars: SUPABASE_URL or SUPABASE_ANON_KEY ");
 }
-
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 export default supabase;
