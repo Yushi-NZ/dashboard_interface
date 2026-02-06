@@ -14,7 +14,8 @@ export default function handler(req, res) {
     `&client_id=${encodeURIComponent(XERO_CLIENT_ID)}` +
     `&redirect_uri=${encodeURIComponent(XERO_REDIRECT_URL)}` +
     `&scope=${encodeURIComponent(XERO_SCOPES)}` +
-    `&state=${encodeURIComponent(state)}`;
+    `&state=${encodeURIComponent(state)}` +
+    `&prompt=consent`; // Forces Xero to refresh permissions
 
   // Use writeHead for the most reliable redirect in Vercel functions
   res.writeHead(302, { Location: url });
